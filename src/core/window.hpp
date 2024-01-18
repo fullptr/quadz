@@ -54,6 +54,7 @@ public:
 
     auto set_name(const std::string& name) -> void;
     auto set_callback(const window_callback& callback) -> void;
+    auto set_is_resizable(bool set_is_resizable) -> void;
 
     auto width() const -> int;
     auto height() const -> int;

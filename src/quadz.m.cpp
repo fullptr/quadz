@@ -8,8 +8,19 @@
 
 #include <glm/glm.hpp>
 
+#include <array>
 #include <memory>
 #include <print>
+
+static constexpr auto WIDTH = std::size_t{10};
+static constexpr auto HEIGHT = std::size_t{20};
+
+static constexpr auto CELL_SIZE = std::size_t{25};
+static constexpr auto CELL_PADDING = std::size_t{5};
+
+static constexpr auto COLOURS = std::array<glm::vec3, 1>{
+    glm::vec3{0.1, 0.1, 0.1}, // 0
+};
 
 auto main() -> int
 {
@@ -31,8 +42,22 @@ auto main() -> int
         mouse.on_event(event);
         keyboard.on_event(event);
     });
+    window.set_is_resizable(false);
+
+    auto grid = std::array<char, WIDTH * HEIGHT>{};
+    grid.fill(char{0});
+
+    static constexpr auto grid_size_pixels = glm::vec2{
+        WIDTH * CELL_SIZE + (WIDTH - 1) * CELL_PADDING,
+        HEIGHT * CELL_SIZE + (HEIGHT - 1) * CELL_PADDING
+    };
+    static const auto top_left = glm::vec2{
+        (window.width() - grid_size_pixels.x) / 2.0f,
+        (window.height() - grid_size_pixels.y) / 2.0f,
+    };
 
     auto renderer  = quadz::renderer{};
+
 
     while (window.is_running()) {
         const double dt = timer.on_update();
@@ -44,7 +69,13 @@ auto main() -> int
         window.clear();
 
         renderer.bind();
-        renderer.draw({100.0f, 100.0f, 25.0f, 25.0f}, 0.0f, glm::vec3{0.0, 1.0, 0.0}, camera);
+        for (std::size_t x = 0; x != WIDTH; ++x) {
+            for (std::size_t y = 0; y != HEIGHT; ++y) {
+                const auto cell = grid[y * WIDTH + x];
+                const auto colour = COLOURS[static_cast<std::size_t>(cell)];
+                renderer.draw({top_left.x + (CELL_SIZE + CELL_PADDING) * x, top_left.y + (CELL_SIZE + CELL_PADDING) * y, CELL_SIZE, CELL_SIZE}, 0.0f, colour, camera);
+            }
+        }
 
         window.swap_buffers();
     }

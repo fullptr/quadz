@@ -213,6 +213,15 @@ void window::set_callback(const window_callback& callback)
     d_data.callback = callback;
 }
 
+auto window::set_is_resizable(bool is_resizable) -> void
+{
+	if (is_resizable) {
+		glfwSetWindowAttrib(d_data.native_window, GLFW_RESIZABLE, GLFW_TRUE);
+	} else {
+		glfwSetWindowAttrib(d_data.native_window, GLFW_RESIZABLE, GLFW_FALSE);
+	}
+}
+
 auto window::width() const -> int
 {
 	return d_data.width; 
