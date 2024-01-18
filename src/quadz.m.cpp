@@ -18,9 +18,25 @@ static constexpr auto HEIGHT = std::size_t{20};
 static constexpr auto CELL_SIZE = std::size_t{25};
 static constexpr auto CELL_PADDING = std::size_t{5};
 
-static constexpr auto COLOURS = std::array<glm::vec3, 1>{
+static constexpr auto COLOURS = std::array<glm::vec3, 2>{
     glm::vec3{0.1, 0.1, 0.1}, // 0
+    glm::vec3{0.0, 1.0, 1.0}, // 1
 };
+
+using char_grid = std::array<char, WIDTH * HEIGHT>;
+
+auto grid_at(char_grid& grid, glm::ivec2 pos) -> char&
+{
+    return grid[pos.y * WIDTH + pos.x];
+}
+
+auto move_current(char_grid& grid, glm::ivec2 old_pos, glm::ivec2 new_pos) -> bool {
+    if (grid_at(grid, new_pos) == 0) {
+        std::swap(grid_at(grid, old_pos), grid_at(grid, new_pos));
+        return true;
+    }
+    return false;
+}
 
 auto main() -> int
 {
@@ -44,7 +60,7 @@ auto main() -> int
     });
     window.set_is_resizable(false);
 
-    auto grid = std::array<char, WIDTH * HEIGHT>{};
+    auto grid = char_grid{};
     grid.fill(char{0});
 
     static constexpr auto grid_size_pixels = glm::vec2{
@@ -56,9 +72,11 @@ auto main() -> int
         (window.height() - grid_size_pixels.y) / 2.0f,
     };
 
+    auto current_piece_pos = glm::ivec2{0, 0};
+    grid_at(grid, current_piece_pos) = 1;
+
     auto renderer  = quadz::renderer{};
-
-
+    auto accumulator = 0.0f;
     while (window.is_running()) {
         const double dt = timer.on_update();
 
@@ -67,6 +85,20 @@ auto main() -> int
         
         window.poll_events();
         window.clear();
+
+        accumulator += dt;
+        while (accumulator > 1.0) {
+            accumulator -= 1.0;
+            auto new_pos = current_piece_pos;
+            new_pos.y += 1;
+            const auto moved = move_current(grid, current_piece_pos, new_pos);
+            current_piece_pos = new_pos;
+
+            if (!moved) {
+                current_piece_pos = glm::ivec2{0, 0};
+                grid_at(grid, current_piece_pos) = 1;
+            }
+        }
 
         renderer.bind();
         for (std::size_t x = 0; x != WIDTH; ++x) {
