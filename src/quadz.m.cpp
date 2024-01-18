@@ -4,7 +4,7 @@
 #include "core/mouse.hpp"
 #include "core/window.hpp"
 
-#include "player_renderer.hpp"
+#include "renderer.hpp"
 
 #include <glm/glm.hpp>
 
@@ -32,7 +32,7 @@ auto main() -> int
         keyboard.on_event(event);
     });
 
-    auto p_renderer  = quadz::player_renderer{};
+    auto renderer  = quadz::renderer{};
 
     while (window.is_running()) {
         const double dt = timer.on_update();
@@ -43,8 +43,8 @@ auto main() -> int
         window.poll_events();
         window.clear();
 
-        p_renderer.bind();
-        p_renderer.draw({100.0f, 100.0f, 25.0f, 25.0f}, 0.0f, glm::vec3{0.0, 1.0, 0.0}, camera);
+        renderer.bind();
+        renderer.draw({100.0f, 100.0f, 25.0f, 25.0f}, 0.0f, glm::vec3{0.0, 1.0, 0.0}, camera);
 
         window.swap_buffers();
     }

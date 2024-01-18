@@ -11,7 +11,7 @@
 namespace quadz {
 
 // Responsible for rendering the world to the screen.
-class player_renderer
+class renderer
 {
     std::uint32_t d_vao;
     std::uint32_t d_vbo;
@@ -19,12 +19,12 @@ class player_renderer
 
     matt::shader d_shader;
 
-    player_renderer(const player_renderer&) = delete;
-    player_renderer& operator=(const player_renderer&) = delete;
+    renderer(const renderer&) = delete;
+    renderer& operator=(const renderer&) = delete;
 
 public:
-    player_renderer();
-    ~player_renderer();
+    renderer();
+    ~renderer();
 
     auto bind() const -> void;
 

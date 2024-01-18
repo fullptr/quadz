@@ -1,4 +1,4 @@
-#include "player_renderer.hpp"
+#include "renderer.hpp"
 #include "core/utility.hpp"
 #include "core/camera.hpp"
 
@@ -55,7 +55,7 @@ void main()
 
 }
 
-player_renderer::player_renderer()
+renderer::renderer()
     : d_vao{0}
     , d_vbo{0}
     , d_ebo{0}
@@ -81,20 +81,20 @@ player_renderer::player_renderer()
     d_shader.bind();
 }
 
-player_renderer::~player_renderer()
+renderer::~renderer()
 {
     glDeleteBuffers(1, &d_ebo);
     glDeleteBuffers(1, &d_vbo);
     glDeleteVertexArrays(1, &d_vao);
 }
 
-auto player_renderer::bind() const -> void
+auto renderer::bind() const -> void
 {
     glBindVertexArray(d_vao);
     d_shader.bind();
 }
 
-auto player_renderer::draw(glm::vec4 d, float angle, glm::vec3 colour, const matt::camera& camera) -> void
+auto renderer::draw(glm::vec4 d, float angle, glm::vec3 colour, const matt::camera& camera) -> void
 {
     d_shader.load_vec4("u_rect", d);
     d_shader.load_float("u_angle", angle);
