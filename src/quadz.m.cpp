@@ -76,7 +76,8 @@ auto main() -> int
     grid_at(grid, current_piece_pos) = 1;
 
     auto renderer  = quadz::renderer{};
-    auto accumulator = 0.0f;
+    auto accumulator = 0.0;
+    auto move_accumulator = 0.0;
     while (window.is_running()) {
         const double dt = timer.on_update();
 
@@ -87,8 +88,9 @@ auto main() -> int
         window.clear();
 
         accumulator += dt;
-        while (accumulator > 1.0) {
-            accumulator -= 1.0;
+        const auto down_speed = keyboard.is_down(matt::keyboard_key::D) ? 0.2 : 1.0;
+        if (accumulator > down_speed) {
+            accumulator = 0;
             auto new_pos = current_piece_pos;
             new_pos.y += 1;
             const auto moved = move_current(grid, current_piece_pos, new_pos);
@@ -97,6 +99,23 @@ auto main() -> int
             if (!moved) {
                 current_piece_pos = glm::ivec2{0, 0};
                 grid_at(grid, current_piece_pos) = 1;
+            }
+        }
+
+        move_accumulator += dt;
+        while (move_accumulator > 0.4) {
+            move_accumulator -= 0.4;
+            if (keyboard.is_down(matt::keyboard_key::A)) {
+                auto new_pos = current_piece_pos;
+                new_pos.x -= 1;
+                const auto moved = move_current(grid, current_piece_pos, new_pos);
+                current_piece_pos = new_pos;
+            }
+            if (keyboard.is_down(matt::keyboard_key::D)) {
+                auto new_pos = current_piece_pos;
+                new_pos.x += 1;
+                const auto moved = move_current(grid, current_piece_pos, new_pos);
+                current_piece_pos = new_pos;
             }
         }
 
