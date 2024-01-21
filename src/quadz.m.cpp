@@ -25,12 +25,20 @@ static constexpr auto COLOURS = std::array<glm::vec3, 2>{
 
 using char_grid = std::array<char, WIDTH * HEIGHT>;
 
+auto grid_valid(const char_grid& grid, glm::ivec2 pos) -> bool
+{
+    return 0 <= pos.x && pos.x < WIDTH && 0 <= pos.y && pos.y < HEIGHT;
+}
+
 auto grid_at(char_grid& grid, glm::ivec2 pos) -> char&
 {
     return grid[pos.y * WIDTH + pos.x];
 }
 
 auto move_current(char_grid& grid, glm::ivec2 old_pos, glm::ivec2 new_pos) -> bool {
+    if (!grid_valid(grid, new_pos)) {
+        return false;
+    }
     if (grid_at(grid, new_pos) == 0) {
         std::swap(grid_at(grid, old_pos), grid_at(grid, new_pos));
         return true;
