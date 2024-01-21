@@ -88,7 +88,7 @@ auto main() -> int
         window.clear();
 
         accumulator += dt;
-        const auto down_speed = keyboard.is_down(matt::keyboard_key::D) ? 0.2 : 1.0;
+        const auto down_speed = keyboard.is_down(matt::keyboard_key::S) ? 0.1 : 0.5;
         if (accumulator > down_speed) {
             accumulator = 0;
             auto new_pos = current_piece_pos;
@@ -102,21 +102,17 @@ auto main() -> int
             }
         }
 
-        move_accumulator += dt;
-        while (move_accumulator > 0.4) {
-            move_accumulator -= 0.4;
-            if (keyboard.is_down(matt::keyboard_key::A)) {
-                auto new_pos = current_piece_pos;
-                new_pos.x -= 1;
-                const auto moved = move_current(grid, current_piece_pos, new_pos);
-                current_piece_pos = new_pos;
-            }
-            if (keyboard.is_down(matt::keyboard_key::D)) {
-                auto new_pos = current_piece_pos;
-                new_pos.x += 1;
-                const auto moved = move_current(grid, current_piece_pos, new_pos);
-                current_piece_pos = new_pos;
-            }
+        if (keyboard.is_down_this_frame(matt::keyboard_key::A)) {
+            auto new_pos = current_piece_pos;
+            new_pos.x -= 1;
+            const auto moved = move_current(grid, current_piece_pos, new_pos);
+            current_piece_pos = new_pos;
+        }
+        if (keyboard.is_down_this_frame(matt::keyboard_key::D)) {
+            auto new_pos = current_piece_pos;
+            new_pos.x += 1;
+            const auto moved = move_current(grid, current_piece_pos, new_pos);
+            current_piece_pos = new_pos;
         }
 
         renderer.bind();
