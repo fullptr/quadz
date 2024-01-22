@@ -11,6 +11,7 @@ find_package(glm CONFIG REQUIRED)
 add_executable(quadz
     quadz.m.cpp
     renderer.cpp
+    game_grid.cpp
 
     core/mouse.cpp
     core/shader.cpp
