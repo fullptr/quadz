@@ -18,12 +18,14 @@ static constexpr auto CELL_PADDING = std::size_t{5};
 
 static const auto COLOURS = std::array{
     glm::vec3{0.1, 0.1, 0.1}, // 0
-    glm::vec3{0.0, 1.0, 1.0}, // 1
-    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 2
-    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 3
-    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 4
-    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 5
-    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 6
+
+    glm::vec3{0.0, 0.0, 1.0}, // 1
+    glm::vec3{0.0, 1.0, 0.0}, // 2
+    glm::vec3{1.0, 0.0, 0.0}, // 3
+
+    glm::vec3{1.0, 1.0, 0.0}, // 4
+    glm::vec3{1.0, 0.0, 1.0}, // 5
+    glm::vec3{0.0, 1.0, 1.0}, // 6
 };
 
 auto main() -> int
@@ -88,7 +90,7 @@ auto main() -> int
             if (!moved) {
                 grid.delete_all_full_rows();
                 current_piece_pos = glm::ivec2{0, 0};
-                grid.at(current_piece_pos) = matt::random_element(std::array{2, 3, 4, 5, 6});
+                grid.at(current_piece_pos) = (char)matt::random_from_range(1, 6);
             }
         }
 
