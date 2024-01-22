@@ -17,6 +17,16 @@ auto game_grid::at(glm::ivec2 pos) const -> char
     return d_grid[pos.y * WIDTH + pos.x];
 }
 
+auto game_grid::at(int x, int y) -> char&
+{
+    return at({x, y});
+}
+
+auto game_grid::at(int x, int y) const -> char
+{
+    return at({x, y});
+}
+
 auto game_grid::try_move(glm::ivec2 src, glm::ivec2 dst) -> bool
 {
     if (!valid(dst)) return false;
@@ -33,11 +43,11 @@ auto game_grid::delete_row(int y) -> void
         return;
     }
     else if (y == 0) {
-        for (int x = 0; x != WIDTH; ++x) at({x, y}) = 0;
+        for (int x = 0; x != WIDTH; ++x) at(x, y) = 0;
     }
     else {
         for (int x = 0; x != WIDTH; ++x) {
-            for (int j = 0; j != y; ++j) at({x, y - j}) = at({x, y - j - 1});
+            for (int j = 0; j != y; ++j) at(x, y - j) = at(x, y - j - 1);
         }
     }
 }
@@ -45,7 +55,7 @@ auto game_grid::delete_row(int y) -> void
 auto game_grid::is_row_full(int y) -> bool
 {
     for (int x = 0; x != WIDTH; ++x) {
-        if (at({x, y}) == 0) return false;
+        if (at(x, y) == 0) return false;
     }
     return true;
 }

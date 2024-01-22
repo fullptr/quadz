@@ -16,9 +16,14 @@
 static constexpr auto CELL_SIZE = std::size_t{25};
 static constexpr auto CELL_PADDING = std::size_t{5};
 
-static constexpr auto COLOURS = std::array<glm::vec3, 2>{
+static const auto COLOURS = std::array{
     glm::vec3{0.1, 0.1, 0.1}, // 0
     glm::vec3{0.0, 1.0, 1.0}, // 1
+    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 2
+    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 3
+    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 4
+    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 5
+    glm::vec3{matt::random_unit(), matt::random_unit(), matt::random_unit()}, // 6
 };
 
 auto main() -> int
@@ -83,7 +88,7 @@ auto main() -> int
             if (!moved) {
                 grid.delete_all_full_rows();
                 current_piece_pos = glm::ivec2{0, 0};
-                grid.at(current_piece_pos) = 1;
+                grid.at(current_piece_pos) = matt::random_element(std::array{2, 3, 4, 5, 6});
             }
         }
 
@@ -91,19 +96,23 @@ auto main() -> int
             auto new_pos = current_piece_pos;
             new_pos.x -= 1;
             const auto moved = grid.try_move(current_piece_pos, new_pos);
-            current_piece_pos = new_pos;
+            if (moved) {
+                current_piece_pos = new_pos;
+            }
         }
         if (keyboard.is_down_this_frame(matt::keyboard_key::D)) {
             auto new_pos = current_piece_pos;
             new_pos.x += 1;
             const auto moved = grid.try_move(current_piece_pos, new_pos);
-            current_piece_pos = new_pos;
+            if (moved) {
+                current_piece_pos = new_pos;
+            }
         }
 
         renderer.bind();
         for (std::size_t x = 0; x != WIDTH; ++x) {
             for (std::size_t y = 0; y != HEIGHT; ++y) {
-                const auto cell = grid.at({x, y});
+                const auto cell = grid.at(x, y);
                 const auto colour = COLOURS[static_cast<std::size_t>(cell)];
                 renderer.draw({top_left.x + (CELL_SIZE + CELL_PADDING) * x, top_left.y + (CELL_SIZE + CELL_PADDING) * y, CELL_SIZE, CELL_SIZE}, 0.0f, colour, camera);
             }
