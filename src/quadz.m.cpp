@@ -81,6 +81,7 @@ auto main() -> int
             current_piece_pos = new_pos;
 
             if (!moved) {
+                grid.delete_all_full_rows();
                 current_piece_pos = glm::ivec2{0, 0};
                 grid.at(current_piece_pos) = 1;
             }

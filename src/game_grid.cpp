@@ -27,4 +27,40 @@ auto game_grid::try_move(glm::ivec2 src, glm::ivec2 dst) -> bool
     return false;
 }
 
+auto game_grid::delete_row(int y) -> void
+{
+    if (y < 0) {
+        return;
+    }
+    else if (y == 0) {
+        for (int x = 0; x != WIDTH; ++x) at({x, y}) = 0;
+    }
+    else {
+        for (int x = 0; x != WIDTH; ++x) {
+            for (int j = 0; j != y; ++j) at({x, y - j}) = at({x, y - j - 1});
+        }
+    }
+}
+
+auto game_grid::is_row_full(int y) -> bool
+{
+    for (int x = 0; x != WIDTH; ++x) {
+        if (at({x, y}) == 0) return false;
+    }
+    return true;
+}
+
+auto game_grid::delete_all_full_rows() -> int
+{
+    int num_deleted = 0;
+    for (int j = 0; j != HEIGHT; ++j) {
+        int y = HEIGHT - j - 1;
+        if (is_row_full(y)) {
+            delete_row(y);
+            ++num_deleted;
+        }
+    }
+    return num_deleted;
+}
+
 }
